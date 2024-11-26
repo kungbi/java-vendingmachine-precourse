@@ -2,10 +2,10 @@ package vendingmachine.domain;
 
 public class Product {
     private final String name;
-    private final double price;
-    private final int quantity;
+    private final int price;
+    private int quantity;
 
-    public Product(String name, double price, int quantity) {
+    public Product(String name, int price, int quantity) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
@@ -15,11 +15,15 @@ public class Product {
         return name;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public boolean isAvailableToBuy() {
+        return quantity > 0;
     }
 }

@@ -16,8 +16,8 @@ public class ProductRepository implements Repository<Product> {
     }
 
     private void addValidate(Product product) {
-        if (product.getQuantity() < 1) {
-            throw new IllegalArgumentException("Quantity must be greater than 0");
+        if (product.getQuantity() < 0) {
+            throw new IllegalArgumentException("Quantity must be greater than zero");
         }
         if (this.exists(product.getName())) {
             throw new IllegalArgumentException("Product already exists");
@@ -28,6 +28,11 @@ public class ProductRepository implements Repository<Product> {
         if (product.getPrice() % 10 != 0) {
             throw new IllegalArgumentException("Price must be a multiple of 10");
         }
+    }
+
+    public int getMinPrice() {
+        List<Product> availableProducts = this.products.stream().filter(Product::isAvailableToBuy).toList();
+        return availableProducts.stream().mapToInt(Product::getPrice).min().orElse(0);
     }
 
     @Override
