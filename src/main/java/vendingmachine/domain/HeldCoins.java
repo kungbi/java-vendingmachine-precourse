@@ -65,11 +65,12 @@ public class HeldCoins {
             int numberOfCoins = this.getNumberOfCoins(coin);
             int returnCount = Math.min(remainChange / coin.getAmount(), numberOfCoins);
             this.decreaseCount(coin, returnCount);
-            remainChange -= coin.getAmount() * returnCount;
-            coins.put(coin, returnCount);
             if (remainChange == 0) {
                 break;
             }
+
+            remainChange -= coin.getAmount() * returnCount;
+            coins.put(coin, returnCount);
         }
         return new CoinsDto(coins);
     }

@@ -16,7 +16,7 @@ public class OutputView {
     }
 
     public static void printChange(CoinsDto coins) {
-        if (coins.coins().isEmpty()) {
+        if (coins.isEmpty()) {
             System.out.println("잔돈없음");
             return;
         }
@@ -43,7 +43,7 @@ public class OutputView {
                 .toList();
 
         for (Coin coin : sortedCoins) {
-            if (!coins.coins().containsKey(coin)) {
+            if (!coins.coins().containsKey(coin) || coins.coins().get(coin) == 0) {
                 continue;
             }
             int amount = coin.getAmount();
