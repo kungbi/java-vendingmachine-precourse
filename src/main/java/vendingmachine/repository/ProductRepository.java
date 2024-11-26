@@ -35,6 +35,17 @@ public class ProductRepository implements Repository<Product> {
         return availableProducts.stream().mapToInt(Product::getPrice).min().orElse(0);
     }
 
+    public int getTotalQuantity() {
+        return this.products.stream().mapToInt(Product::getQuantity).sum();
+    }
+
+    public boolean isStockEmpty() {
+        if (0 < this.getTotalQuantity()) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void remove(Product data) {
 
