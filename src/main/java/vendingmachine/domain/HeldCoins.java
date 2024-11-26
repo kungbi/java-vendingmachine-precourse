@@ -15,7 +15,7 @@ public class HeldCoins {
             throw new IllegalArgumentException();
         }
 
-        this.coins = coins;
+        this.coins = new HashMap<>(coins);
     }
 
     public static HeldCoins createRandomHeldCoins(int amount) {
@@ -49,7 +49,7 @@ public class HeldCoins {
         return coins.getOrDefault(coin, 0);
     }
 
-    public void decreaseCount(Coin coin, int count) {
+    private void decreaseCount(Coin coin, int count) {
         int numberOfCoins = this.coins.getOrDefault(coin, 0);
         if (numberOfCoins < count) {
             throw new IllegalArgumentException();

@@ -3,7 +3,7 @@ package vendingmachine.domain;
 public class Product {
     private final String name;
     private final int price;
-    private int quantity;
+    private final int quantity;
 
     public Product(String name, int price, int quantity) {
         this.name = name;

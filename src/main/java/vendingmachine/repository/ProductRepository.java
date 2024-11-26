@@ -68,7 +68,8 @@ public class ProductRepository implements Repository<Product> {
 
     @Override
     public void update(String name, Product newData) {
-
+        this.products.removeIf(product -> product.getName().equals(name));
+        this.products.add(newData);
     }
 
     @Override

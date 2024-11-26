@@ -10,4 +10,11 @@ public class PaymentAmount {
     public int getAmount() {
         return amount;
     }
+
+    public void decreaseAmount(int amount) {
+        if (this.amount < amount) {
+            throw new IllegalArgumentException();
+        }
+        this.amount -= amount;
+    }
 }
