@@ -1,5 +1,8 @@
 package vendingmachine;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum Coin {
     COIN_500(500),
     COIN_100(100),
@@ -14,5 +17,9 @@ public enum Coin {
 
     public int getAmount() {
         return amount;
+    }
+
+    public static List<Coin> getSortedCoins() {
+        return Arrays.stream(Coin.values()).sorted((o1, o2) -> o2.getAmount() - o1.getAmount()).toList();
     }
 }

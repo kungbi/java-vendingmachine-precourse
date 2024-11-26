@@ -71,4 +71,12 @@ class HeldCoinsTest {
         Assertions.assertThat(changeCoins.coins()).isEqualTo(expected);
     }
 
+
+    @Test
+    void 랜덤_잔돈_생성_테스트() {
+        HeldCoins randomHeldCoins = HeldCoins.createRandomHeldCoins(1000);
+        int totalAmount = randomHeldCoins.getTotalAmount();
+        System.out.println(randomHeldCoins);
+        Assertions.assertThat(totalAmount).isEqualTo(1000);
+    }
 }

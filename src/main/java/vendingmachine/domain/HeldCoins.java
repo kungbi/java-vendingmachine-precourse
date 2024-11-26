@@ -1,6 +1,6 @@
 package vendingmachine.domain;
 
-import java.util.Arrays;
+import camp.nextstep.edu.missionutils.Randoms;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +16,23 @@ public class HeldCoins {
         }
 
         this.coins = coins;
+    }
+
+    public static HeldCoins createRandomHeldCoins(int amount) {
+        Map<Coin, Integer> coins = new HashMap<>();
+        int remainAmount = amount;
+        for (Coin coin : Coin.getSortedCoins()) {
+            if (coin == Coin.COIN_10) {
+                break;
+            }
+            int maxNumberOfCoins = remainAmount / coin.getAmount();
+            int numberOfCoins = Randoms.pickNumberInRange(0, maxNumberOfCoins);
+            coins.put(coin, numberOfCoins);
+            remainAmount -= numberOfCoins * coin.getAmount();
+        }
+        ;
+        coins.put(Coin.COIN_10, remainAmount / Coin.COIN_10.getAmount());
+        return new HeldCoins(coins);
     }
 
     public int getTotalAmount() {
@@ -41,8 +58,7 @@ public class HeldCoins {
     }
 
     public CoinsDto getChangeCoins(int change) {
-        List<Coin> sortedCoins = Arrays.stream(Coin.values()).sorted((o1, o2) -> o2.getAmount() - o1.getAmount())
-                .toList();
+        List<Coin> sortedCoins = Coin.getSortedCoins();
         Map<Coin, Integer> coins = new HashMap<>();
         int remainChange = change;
         for (Coin coin : sortedCoins) {
@@ -56,5 +72,12 @@ public class HeldCoins {
             }
         }
         return new CoinsDto(coins);
+    }
+
+    @Override
+    public String toString() {
+        return "HeldCoins{" +
+               "coins=" + coins +
+               '}';
     }
 }
