@@ -21,7 +21,7 @@ public class OutputView {
             return;
         }
         System.out.println("잔돈");
-        printCoinsExceptNone(coins);
+        printAllCoins(coins);
     }
 
     public static void printInputAmount(int amount) {
