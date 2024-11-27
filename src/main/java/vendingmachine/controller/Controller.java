@@ -24,34 +24,53 @@ public class Controller {
     }
 
     public void run() {
-        int vendingMachineBalance = retryInputUtil.getVendingMachineBalance();
-        HeldCoins heldCoins = HeldCoins.createRandomHeldCoins(vendingMachineBalance);
+        HeldCoins heldCoins = initializeVendingMachine();
+        initializeProducts();
 
-        OutputView.printHeldCoins(heldCoins.getChangeCoins(vendingMachineBalance));
+        PaymentAmount paymentAmount = getPaymentAmountFromUser();
+        processPurchases(paymentAmount, heldCoins);
 
-        List<Product> products = retryInputUtil.getProducts();
-        for (Product product : products) {
-            productRepository.add(product);
-        }
-
-        int inputAmount = retryInputUtil.getInputAmount();
-        PaymentAmount paymentAmount = new PaymentAmount(inputAmount);
-
-        while (true) {
-            try {
-                OutputView.printInputAmount(paymentAmount.getAmount());
-                if (productRepository.isStockEmpty() || paymentAmount.getAmount() < productRepository.getMinPrice()) {
-                    break;
-                }
-
-                String orderProduct = InputView.getOrderProduct().strip();
-                paymentService.purchase(new PurchaseInputDto(paymentAmount, heldCoins, orderProduct));
-            } catch (IllegalArgumentException error) {
-                OutputView.printError(error.getMessage());
-            }
-        }
         CoinsDto changeCoins = heldCoins.getChangeCoins(paymentAmount.getAmount());
         OutputView.printChange(changeCoins);
     }
 
+    private HeldCoins initializeVendingMachine() {
+        int vendingMachineBalance = retryInputUtil.getVendingMachineBalance();
+        HeldCoins heldCoins = HeldCoins.createRandomHeldCoins(vendingMachineBalance);
+        OutputView.printHeldCoins(heldCoins.getCoinsDto());
+        return heldCoins;
+    }
+
+    private void initializeProducts() {
+        List<Product> products = retryInputUtil.getProducts();
+        this.productRepository.addAll(products);
+    }
+
+    private PaymentAmount getPaymentAmountFromUser() {
+        int inputAmount = retryInputUtil.getInputAmount();
+        return new PaymentAmount(inputAmount);
+    }
+
+    private void processPurchases(PaymentAmount paymentAmount, HeldCoins heldCoins) {
+        while (true) {
+            OutputView.printInputAmount(paymentAmount.getAmount());
+            if (!canPurchase(paymentAmount)) {
+                break;
+            }
+            try {
+                handlePurchase(paymentAmount, heldCoins);
+            } catch (IllegalArgumentException error) {
+                OutputView.printError(error.getMessage());
+            }
+        }
+    }
+
+    private boolean canPurchase(PaymentAmount paymentAmount) {
+        return !productRepository.isStockEmpty() && paymentAmount.getAmount() >= productRepository.getMinPrice();
+    }
+
+    private void handlePurchase(PaymentAmount paymentAmount, HeldCoins heldCoins) {
+        String orderProduct = InputView.getOrderProduct().strip();
+        paymentService.purchase(new PurchaseInputDto(paymentAmount, heldCoins, orderProduct));
+    }
 }

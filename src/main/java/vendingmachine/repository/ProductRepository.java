@@ -15,6 +15,12 @@ public class ProductRepository implements Repository<Product> {
         products.add(product);
     }
 
+    public void addAll(List<Product> products) {
+        for (Product product : products) {
+            this.add(product);
+        }
+    }
+
     private void addValidate(Product product) {
         if (this.exists(product.getName())) {
             throw new IllegalArgumentException("Product already exists");

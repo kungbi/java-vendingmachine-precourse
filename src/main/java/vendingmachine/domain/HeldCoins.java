@@ -51,6 +51,10 @@ public class HeldCoins {
         return coins.getOrDefault(coin, 0);
     }
 
+    public CoinsDto getCoinsDto() {
+        return new CoinsDto(Map.copyOf(coins));
+    }
+
     public CoinsDto getChangeCoins(int change) {
         List<Coin> sortedCoins = Coin.getSortedCoins();
         Map<Coin, Integer> coins = new HashMap<>();
