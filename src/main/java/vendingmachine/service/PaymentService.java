@@ -17,7 +17,6 @@ public class PaymentService {
     public void purchase(PurchaseInputDto input) {
         PaymentAmount paymentAmount = input.paymentAmount();
         String productName = input.productName();
-        HeldCoins heldCoins = input.coins();
 
         // 해당 상품이 있는지 확인
         Optional<Product> foundProduct = this.productRepository.findByName(productName);

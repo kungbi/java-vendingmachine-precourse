@@ -1,6 +1,7 @@
 package vendingmachine.domain;
 
 import camp.nextstep.edu.missionutils.Randoms;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,17 +22,18 @@ public class HeldCoins {
     public static HeldCoins createRandomHeldCoins(int amount) {
         Map<Coin, Integer> coins = new HashMap<>();
         int remainAmount = amount;
-        for (Coin coin : Coin.getSortedCoins()) {
-            if (coin == Coin.COIN_10) {
-                break;
+        while (0 < remainAmount) {
+            int randomAmount = Randoms.pickNumberInList(Arrays.stream(Coin.values()).map(Coin::getAmount).toList());
+            if (remainAmount < randomAmount) {
+                continue;
             }
-            int maxNumberOfCoins = remainAmount / coin.getAmount();
-            int numberOfCoins = Randoms.pickNumberInRange(0, maxNumberOfCoins);
-            coins.put(coin, numberOfCoins);
-            remainAmount -= numberOfCoins * coin.getAmount();
+            Coin coin = Coin.findByAmount(randomAmount);
+
+            coins.putIfAbsent(coin, 0);
+            coins.put(coin, coins.get(coin) + 1);
+            remainAmount -= coin.getAmount();
         }
-        ;
-        coins.put(Coin.COIN_10, remainAmount / Coin.COIN_10.getAmount());
+
         return new HeldCoins(coins);
     }
 
@@ -49,14 +51,6 @@ public class HeldCoins {
         return coins.getOrDefault(coin, 0);
     }
 
-    private void decreaseCount(Coin coin, int count) {
-        int numberOfCoins = this.coins.getOrDefault(coin, 0);
-        if (numberOfCoins < count) {
-            throw new IllegalArgumentException();
-        }
-        this.coins.put(coin, numberOfCoins - count);
-    }
-
     public CoinsDto getChangeCoins(int change) {
         List<Coin> sortedCoins = Coin.getSortedCoins();
         Map<Coin, Integer> coins = new HashMap<>();
@@ -64,7 +58,6 @@ public class HeldCoins {
         for (Coin coin : sortedCoins) {
             int numberOfCoins = this.getNumberOfCoins(coin);
             int returnCount = Math.min(remainChange / coin.getAmount(), numberOfCoins);
-            this.decreaseCount(coin, returnCount);
             if (remainChange == 0) {
                 break;
             }

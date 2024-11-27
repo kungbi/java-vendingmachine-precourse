@@ -16,17 +16,8 @@ public class ProductRepository implements Repository<Product> {
     }
 
     private void addValidate(Product product) {
-        if (product.getQuantity() < 0) {
-            throw new IllegalArgumentException("Quantity must be greater than zero");
-        }
         if (this.exists(product.getName())) {
             throw new IllegalArgumentException("Product already exists");
-        }
-        if (product.getPrice() < 1_000) {
-            throw new IllegalArgumentException("Price must be greater than 0");
-        }
-        if (product.getPrice() % 10 != 0) {
-            throw new IllegalArgumentException("Price must be a multiple of 10");
         }
     }
 
@@ -41,9 +32,9 @@ public class ProductRepository implements Repository<Product> {
 
     public boolean isStockEmpty() {
         if (0 < this.getTotalQuantity()) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override
